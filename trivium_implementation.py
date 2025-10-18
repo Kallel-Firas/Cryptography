@@ -1,3 +1,6 @@
+# Implementation of paper: https://web.archive.org/web/20161020205326/http://www.ecrypt.eu.org/stream/ciphers/trivium/trivium.pdf
+# Wikipedia page: https://en.wikipedia.org/wiki/Trivium_%28cipher%29
+
 from bitarray import bitarray
 from random import randint
 
