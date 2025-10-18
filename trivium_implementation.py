@@ -7,7 +7,8 @@ class Trivium:
         self.bits_generated = 0
         self.N = N
         # internal state: s
-        # make it one bit larger to start counting from 1 instead of 0
+        # make it one bit larger to start counting from 1 instead of 0.
+        # Using bitarrays for memory efficiency. For speed, use numpy bool arrays.
         self.s = bitarray([0]*289)
         self.s[1:80+1] = k
         self.s[94:174] = iv
@@ -19,9 +20,12 @@ class Trivium:
             t1 = t1 ^ (self.s[91] & self.s[92]) ^ self.s[171]
             t2 = t2 ^ (self.s[175] & self.s[176]) ^ self.s[264]
             t3 = t3 ^ (self.s[286] & self.s[287]) ^ self.s[69]
-            self.s[1:93+1] = bitarray([t3])+self.s[1:93]
-            self.s[94:177+1] = bitarray([t1])+self.s[94:177]
-            self.s[178:288+1] = bitarray([t2])+self.s[178:288]
+            self.s[2:93+1] = self.s[1:92+1]
+            self.s[1] = t3
+            self.s[95:177+1] = self.s[94:176+1]
+            self.s[94] = t1
+            self.s[179:288+1] = self.s[178:287+1]
+            self.s[178] = t2
 
     def _next_key(self):
         t1 = self.s[66] ^ self.s[93]
@@ -31,9 +35,12 @@ class Trivium:
         t1 = t1 ^ (self.s[91] & self.s[92]) ^ self.s[171]
         t2 = t2 ^ (self.s[175] & self.s[176]) ^ self.s[264]
         t3 = t3 ^ (self.s[286] & self.s[287]) ^ self.s[69]
-        self.s[1:93+1] = bitarray([t3])+self.s[1:92+1]
-        self.s[94:177+1] = bitarray([t1])+self.s[94:176+1]
-        self.s[178:288+1] = bitarray([t2])+self.s[178:287+1]
+        self.s[2:93+1] = self.s[1:92+1]
+        self.s[1] = t3
+        self.s[95:177+1] = self.s[94:176+1]
+        self.s[94] = t1
+        self.s[179:288+1] = self.s[178:287+1]
+        self.s[178] = t2
         return z
 
     def __iter__(self):
